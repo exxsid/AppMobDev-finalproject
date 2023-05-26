@@ -39,6 +39,19 @@ app.get("/searchByName/:name", (req, res) => {
   });
 });
 
+app.get("/searchById/:id", (req, res) => {
+  const id = req.params.id;
+
+  const query = `CALL SearchProductById(${id})`;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      throw err;
+    }
+    res.send(results);
+  });
+});
+
 app.put("/addToCart", (req, res) => {
   const prodId = req.body.id;
   const prodQuantity = req.body.quantity;
@@ -83,14 +96,43 @@ app.post("/saveTransaction", (req, res) => {
   const ttlAmount = req.body.totalAmount;
   const data = req.body.data;
 
-  const query = `CALL SaveTransaction(${ttlAmount}, "${data}")`;
+  db.beginTransaction((err) => {
+    if (err) throw err;
 
-  db.query(query, (err, result) => {
-    if (err) {
-      throw err;
-    }
-    res.send(result);
-  });
+    // insert in totalAmount in transaction table
+    const totalAmountQuery = `INSERT INTO transactions(total_amount) VALUES (${ttlAmount})`;
+    db.query(totalAmountQuery, (error, result) => {
+      if (error) {
+        return db.rollback(() => {
+          throw error;
+        });
+      }
+
+      const latestId = result.insertId;
+
+      // insert all the products in cart to transaction_details table
+      data.forEach((d) => {
+        const transactionDetailsQuery = `INSERT INTO transaction_details(transaction_id, product_id, quantity, amount)
+        VALUES (${latestId}, ${d.id}, ${d.quantity}, ${d.amount})`;
+
+        db.query(transactionDetailsQuery, (error, results) => {
+          if (error) {
+            return db.rollback(() => {
+              throw error;
+            });
+          }
+          db.commit((err) => {
+            if (err) {
+              return db.rollback(() => {
+                throw err;
+              });
+            }
+            res.send("succes");
+          });
+        });
+      }); // end foreach
+    });
+  }); // end transaction
 });
 
 app.listen(3000, () => {
