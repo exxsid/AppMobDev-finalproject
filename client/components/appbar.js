@@ -4,7 +4,10 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 import color from "../constants/color";
 
-export const AppBar = ({ title }) => {
+export const AppBar = ({
+  title,
+  leadingButton = { isLeading: false, leadingCBF: () => {} },
+}) => {
   return (
     <>
       <StatusBar bg={color.primary} barStyle="light-content" />
@@ -18,6 +21,12 @@ export const AppBar = ({ title }) => {
         w="100%"
       >
         <HStack alignItems="center">
+          {leadingButton.isLeading && (
+            <IconButton
+              icon={<Icon as={Ionicons} name="ios-arrow-back" />}
+              onPress={leadingButton.leadingCBF}
+            />
+          )}
           <Text color="white" fontSize="20" fontWeight="bold" px="3">
             {title}
           </Text>

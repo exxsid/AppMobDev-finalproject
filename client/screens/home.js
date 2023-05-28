@@ -57,7 +57,7 @@ export const Home = ({ navigation }) => {
 
   return (
     <>
-      <AppBar title="Home"></AppBar>
+      <AppBar title="Home" />
       <Box bg={color.background} flex={1} alignItems={"center"}>
         <Heading
           fontSize={"lg"}
