@@ -23,7 +23,13 @@ export const AppBar = ({
         <HStack alignItems="center">
           {leadingButton.isLeading && (
             <IconButton
-              icon={<Icon as={Ionicons} name="ios-arrow-back" />}
+              icon={
+                <Icon
+                  as={Ionicons}
+                  name="ios-arrow-back"
+                  color={color.textlight}
+                />
+              }
               onPress={leadingButton.leadingCBF}
             />
           )}
