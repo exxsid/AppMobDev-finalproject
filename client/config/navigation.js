@@ -50,6 +50,7 @@ export const BottomNavigator = () => {
             marginBottom: "3%",
           },
           tabBarIconStyle: {},
+          tabBarHideOnKeyboard: true,
         })}
       >
         <Tab.Screen name={homeName} component={HomeStackNavigator} />
