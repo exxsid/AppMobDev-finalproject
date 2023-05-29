@@ -1,21 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Divider,
-  HStack,
-  Heading,
-  ScrollView,
-  Text,
-  VStack,
-  Center,
-  Flex,
-  AspectRatio,
-  Stack,
-  Spacer,
-  FlatList,
-  Spinner,
-} from "native-base";
-import axios from "axios";
+import { Box, HStack, Heading, FlatList, Spinner } from "native-base";
 import { StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 
 import { AppBar } from "../components/appbar";
