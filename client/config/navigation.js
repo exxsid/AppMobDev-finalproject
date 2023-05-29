@@ -8,6 +8,7 @@ import { Home } from "../screens/home";
 import { Scan } from "../screens/scan";
 import { Cart } from "../screens/cart";
 import { ProductDetails } from "../screens/productdetails";
+import color from "../constants/color";
 
 const homeName = "Home";
 const scanName = "Scan";
@@ -39,12 +40,13 @@ export const BottomNavigator = () => {
           tabBarStyle: {
             position: "relative",
             height: "8%",
-            backgroundColor: "#ff2800",
+            backgroundColor: "white",
             justifyContent: "space-evenly",
             alignContent: "center",
           },
           headerShown: false,
-          tabBarActiveTintColor: "#f1f1f1",
+          tabBarActiveTintColor: color.primary,
+          tabBarInactiveTintColor: color.textdark,
           tabBarLabelStyle: {
             position: "absolute",
             marginBottom: "3%",

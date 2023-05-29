@@ -73,7 +73,7 @@ export const Home = ({ navigation }) => {
         width={screen.width}
       >
         <Heading
-          fontSize={"lg"}
+          fontSize={"md"}
           color={color.textdark}
           py={4}
           px={5}
