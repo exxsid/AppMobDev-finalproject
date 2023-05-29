@@ -24,7 +24,7 @@ app.get("/products", (req, res) => {
     if (err) {
       throw err;
     }
-    res.send(result);
+    res.json(result);
   });
 });
 
