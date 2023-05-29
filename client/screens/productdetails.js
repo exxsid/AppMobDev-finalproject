@@ -24,7 +24,9 @@ import color from "../constants/color";
 import cartlist from "../constants/cartlist";
 
 export const ProductDetails = ({ route, navigation }) => {
-  const [orderQuantity, setOrderQuantity] = useState("1");
+  const order =
+    route.params.orderQtty == null ? "1" : route.params.orderQtty.toString();
+  const [orderQuantity, setOrderQuantity] = useState(order);
 
   const orderQuantityOnChange = (text) => {
     const maxValue = route.params.stock;
