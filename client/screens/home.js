@@ -16,11 +16,13 @@ import {
   Spinner,
 } from "native-base";
 import axios from "axios";
-import { Image, View, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
 import { ProductCard } from "../components/productcard";
+
+const screen = Dimensions.get("screen");
 
 export const Home = ({ navigation }) => {
   const [products, setProducts] = useState([]);
@@ -41,6 +43,12 @@ export const Home = ({ navigation }) => {
   const navigateToProductDetails = (item) => {
     navigation.push("Product Details", {
       name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      unit: item.unit,
+      stock: item.stock_quantity,
+      category: item.category_id,
+      image: item.image,
     });
   };
 
@@ -58,7 +66,12 @@ export const Home = ({ navigation }) => {
   return (
     <>
       <AppBar title="Home" />
-      <Box bg={color.background} flex={1} alignItems={"center"}>
+      <Box
+        bg={color.background}
+        flex={1}
+        alignItems={"center"}
+        width={screen.width}
+      >
         <Heading
           fontSize={"lg"}
           color={color.textdark}
@@ -90,6 +103,7 @@ export const Home = ({ navigation }) => {
             onEndReachedThreshold={0.5}
             numColumns={2}
             showsVerticalScrollIndicator={false}
+            initialNumToRender={5}
           />
         ) : (
           renderLoadingSpinner()
