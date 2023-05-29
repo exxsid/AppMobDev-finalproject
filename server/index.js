@@ -110,24 +110,34 @@ app.post("/saveTransaction", (req, res) => {
 
       const latestId = result.insertId;
 
-      // insert all the products in cart to transaction_details table
       data.forEach((d) => {
-        const transactionDetailsQuery = `INSERT INTO transaction_details(transaction_id, product_id, quantity, amount)
-        VALUES (${latestId}, ${d.id}, ${d.quantity}, ${d.amount})`;
-
-        db.query(transactionDetailsQuery, (error, results) => {
+        // query to subtract the quantity to order quantity
+        const subtractQuantityQuery = `CALL AddToCart(${d.id}, ${d.quantity})`;
+        db.query(subtractQuantityQuery, (error, result) => {
           if (error) {
             return db.rollback(() => {
               throw error;
             });
           }
-          db.commit((err) => {
-            if (err) {
+
+          // insert all the products in cart to transaction_details table
+          const transactionDetailsQuery = `INSERT INTO transaction_details(transaction_id, product_id, quantity, amount)
+            VALUES (${latestId}, ${d.id}, ${d.quantity}, ${d.amount})`;
+
+          db.query(transactionDetailsQuery, (error, results) => {
+            if (error) {
               return db.rollback(() => {
-                throw err;
+                throw error;
               });
             }
-            res.send("succes");
+            db.commit((err) => {
+              if (err) {
+                return db.rollback(() => {
+                  throw err;
+                });
+              }
+              res.send("succes");
+            });
           });
         });
       }); // end foreach
