@@ -64,6 +64,7 @@ export const ProductDetails = ({ route, navigation }) => {
 
   const handleAddToCartButton = () => {
     cartlist.push({
+      id: route.params.id,
       name: route.params.name,
       price: route.params.price,
       quantity: route.params.quantity,
@@ -73,6 +74,7 @@ export const ProductDetails = ({ route, navigation }) => {
       image: route.params.image,
       orderQtty: parseInt(orderQuantity),
     });
+    console.log(cartlist);
     Alert.alert("Adding to cart success", "", [
       {
         text: "Okay",
@@ -113,11 +115,10 @@ export const ProductDetails = ({ route, navigation }) => {
               </Heading>
               {/* price quantity per unit */}
               <Text italic bold fontSize={"xl"} color={color.textlight}>
-                PhP {route.params.price.toFixed(2)} {route.params.quantity}/
-                {route.params.unit}
+                PhP {route.params.price.toFixed(2)}/{route.params.unit}
               </Text>
               <Text color={color.textlight} fontSize={"lg"}>
-                {route.params.stock} {route.params.unit} available
+                {route.params.stock} {route.params.unit}
               </Text>
               <Text color={color.textlight} fontSize={"lg"}>
                 {route.params.category}

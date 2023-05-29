@@ -26,6 +26,7 @@ export const Home = ({ navigation }) => {
 
   const navigateToProductDetails = (item) => {
     navigation.push("Product Details", {
+      id: item.id,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
