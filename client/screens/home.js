@@ -34,6 +34,7 @@ export const Home = ({ navigation }) => {
       stock: item.stock_quantity,
       category: item.category_id,
       image: item.image,
+      previousScreen: "Home",
     });
   };
 

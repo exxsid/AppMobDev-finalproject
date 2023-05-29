@@ -20,6 +20,7 @@ export const Cart = ({ navigation }) => {
 
   const navigateToProductDetails = (item) => {
     navigation.push("Product Details", {
+      id: item.id,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
@@ -28,6 +29,7 @@ export const Cart = ({ navigation }) => {
       category: item.category,
       image: item.image,
       orderQtty: item.orderQtty,
+      previousScreen: "Cart",
     });
   };
 

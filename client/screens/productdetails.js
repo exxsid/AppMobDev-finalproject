@@ -63,7 +63,7 @@ export const ProductDetails = ({ route, navigation }) => {
   };
 
   const handleAddToCartButton = () => {
-    cartlist.push({
+    const newItem = {
       id: route.params.id,
       name: route.params.name,
       price: route.params.price,
@@ -73,8 +73,28 @@ export const ProductDetails = ({ route, navigation }) => {
       category: route.params.category,
       image: route.params.image,
       orderQtty: parseInt(orderQuantity),
-    });
-    console.log(cartlist);
+    };
+    if (route.params.previousScreen === "Home") {
+      const existingItem = cartlist.find((item) => item.id == newItem.id);
+
+      if (existingItem) {
+        existingItem.orderQtty += newItem.orderQtty;
+      } else {
+        cartlist.push(newItem);
+      }
+      console.log(cartlist);
+    } else {
+      // cart
+      const existingItem = cartlist.find((item) => item.id == newItem.id);
+
+      if (existingItem) {
+        existingItem.orderQtty = newItem.orderQtty;
+      } else {
+        cartlist.push(newItem);
+      }
+      console.log(cartlist);
+    }
+
     Alert.alert("Adding to cart success", "", [
       {
         text: "Okay",
