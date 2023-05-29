@@ -60,10 +60,10 @@ export const ProductCard = ({
               </Heading>
               {/* price quantity per unit */}
               <Text italic bold fontSize={"sm"} color={color.textlight}>
-                P {price} {quantity}/{unit}
+                P {price} /{unit}
               </Text>
               <Text color={color.textlight} fontSize={"xs"}>
-                {stock} {unit} available
+                {stock} {unit}
               </Text>
               <Text color={color.textlight} fontSize={"xs"}>
                 {category}

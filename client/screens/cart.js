@@ -24,7 +24,7 @@ export const Cart = ({ navigation }) => {
       price: item.price,
       quantity: item.quantity,
       unit: item.unit,
-      stock: item.stock,
+      stock: item.orderQtty,
       category: item.category,
       image: item.image,
       orderQtty: item.orderQtty,
@@ -91,8 +91,8 @@ export const Cart = ({ navigation }) => {
                 price={item.price}
                 quantity={item.quantity}
                 unit={item.unit}
-                stock={item.stock_quantity}
-                category={item.category_id}
+                stock={item.orderQtty}
+                category={item.category}
                 imageLink={item.image}
               />
             </TouchableOpacity>
@@ -104,6 +104,43 @@ export const Cart = ({ navigation }) => {
           initialNumToRender={5}
           extraData={cartList}
         />
+        <HStack
+          bg={"coolGray.50"}
+          width={"full"}
+          py={5}
+          px={3}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Text style={styles.totalAmount}>
+            Total amount: PhP{" "}
+            {cartList
+              .reduce((total, item) => total + item.price * item.orderQtty, 0)
+              .toFixed(2)}
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              Alert.alert(
+                "Clear Cart",
+                "Are you sure you want to clear the cart?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => {},
+                    style: "cancel",
+                  },
+                  {
+                    text: "Yes",
+                    onPress: handleClearCartButton,
+                  },
+                ]
+              )
+            }
+            style={styles.buyButton}
+          >
+            <Text style={{ color: color.textlight }}>Check Out</Text>
+          </TouchableOpacity>
+        </HStack>
       </Box>
     </>
   );
@@ -115,21 +152,36 @@ const styles = StyleSheet.create({
     backgroundColor: "#00755e",
     paddingHorizontal: 10,
     borderRadius: 5,
-    elevation: 10, // Add elevation for shadow effect on Android
-    shadowColor: "rgba(0, 0, 0, 0.3)", // Shadow color for iOS
-    shadowOpacity: 1, // Shadow opacity for iOS
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset for iOS
-    shadowRadius: 4, // Shadow radius for iOS
+    elevation: 10,
+    shadowColor: "rgba(0, 0, 0, 0.3)",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   clearCartButton: {
     padding: 5,
     backgroundColor: "#dfe0df",
     paddingHorizontal: 10,
     borderRadius: 5,
-    elevation: 10, // Add elevation for shadow effect on Android
-    shadowColor: "rgba(0, 0, 0, 0.3)", // Shadow color for iOS
-    shadowOpacity: 1, // Shadow opacity for iOS
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset for iOS
-    shadowRadius: 4, // Shadow radius for iOS
+    elevation: 10,
+    shadowColor: "rgba(0, 0, 0, 0.3)",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  totalAmount: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  buyButton: {
+    backgroundColor: color.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    elevation: 5,
+    shadowColor: "rgba(0, 0, 0, 0.3)",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
 });
