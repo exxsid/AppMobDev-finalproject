@@ -16,11 +16,12 @@ import {
 } from "native-base";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet, Alert } from "react-native";
 import { useState } from "react";
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
+import cartlist from "../constants/cartlist";
 
 export const ProductDetails = ({ route, navigation }) => {
   const [orderQuantity, setOrderQuantity] = useState("1");
@@ -59,6 +60,25 @@ export const ProductDetails = ({ route, navigation }) => {
     setOrderQuantity(newValue.toString());
   };
 
+  const handleAddToCartButton = () => {
+    cartlist.push({
+      name: route.params.name,
+      price: route.params.price,
+      quantity: route.params.quantity,
+      unit: route.params.unit,
+      stock: route.params.stock,
+      category: route.params.category,
+      image: route.params.image,
+      orderQtty: parseInt(orderQuantity),
+    });
+    Alert.alert("Adding to cart success", "", [
+      {
+        text: "Okay",
+        onPress: () => navigation.goBack(),
+      },
+    ]);
+  };
+
   return (
     <>
       <AppBar
@@ -91,7 +111,7 @@ export const ProductDetails = ({ route, navigation }) => {
               </Heading>
               {/* price quantity per unit */}
               <Text italic bold fontSize={"xl"} color={color.textlight}>
-                PhP {route.params.price} {route.params.quantity}/
+                PhP {route.params.price.toFixed(2)} {route.params.quantity}/
                 {route.params.unit}
               </Text>
               <Text color={color.textlight} fontSize={"lg"}>
@@ -146,11 +166,19 @@ export const ProductDetails = ({ route, navigation }) => {
                 }
                 onPress={handleAddButton}
               />
+              <Center flexDirection={"row"}>
+                <Text bold fontSize={"md"}>
+                  Total:{" "}
+                  {(parseInt(orderQuantity) * route.params.price).toFixed(2)}
+                </Text>
+              </Center>
             </HStack>
+
             <Button
               bg={color.primary}
               my={3}
               _text={{ color: color.textlight }}
+              onPress={handleAddToCartButton}
             >
               Add To Cart
             </Button>
