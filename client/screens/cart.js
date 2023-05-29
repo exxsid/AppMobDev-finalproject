@@ -17,6 +17,9 @@ const screen = Dimensions.get("screen");
 
 export const Cart = ({ navigation }) => {
   const [cartList, setCartList] = useState(cartlist);
+  const ttlAmount = cartList
+    .reduce((total, item) => total + item.price * item.orderQtty, 0)
+    .toFixed(2);
 
   const navigateToProductDetails = (item) => {
     navigation.push("Product Details", {
@@ -44,6 +47,33 @@ export const Cart = ({ navigation }) => {
     setCartList(newData);
   };
 
+  const handleCheckOutButton = () => {
+    fetch("http://192.168.100.162:3000/saveTransaction", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        totalAmount: ttlAmount,
+        data: cartlist.map(({ id, orderQtty, price }) => ({
+          id,
+          quantity: orderQtty,
+          amount: orderQtty * price,
+        })),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 1) {
+          alert("Check out success");
+          cartlist.length = 0;
+          const newData = [...cartlist];
+          setCartList(newData);
+        }
+      });
+  };
+
   return (
     <>
       <AppBar title="Cart"></AppBar>
@@ -55,7 +85,11 @@ export const Cart = ({ navigation }) => {
           <Text style={{ color: color.textlight }}>Refresh</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
+            if (cartlist.length == 0) {
+              alert("Cart is empty");
+              return;
+            }
             Alert.alert(
               "Clear Cart",
               "Are you sure you want to clear the cart?",
@@ -70,8 +104,8 @@ export const Cart = ({ navigation }) => {
                   onPress: handleClearCartButton,
                 },
               ]
-            )
-          }
+            );
+          }}
           style={styles.clearCartButton}
         >
           <Text>Clear Cart</Text>
@@ -114,17 +148,16 @@ export const Cart = ({ navigation }) => {
           justifyContent={"space-between"}
           alignItems={"center"}
         >
-          <Text style={styles.totalAmount}>
-            Total amount: PhP{" "}
-            {cartList
-              .reduce((total, item) => total + item.price * item.orderQtty, 0)
-              .toFixed(2)}
-          </Text>
+          <Text style={styles.totalAmount}>Total amount: PhP {ttlAmount}</Text>
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              if (cartlist.length == 0) {
+                alert("Cart is empty");
+                return;
+              }
               Alert.alert(
-                "Clear Cart",
-                "Are you sure you want to clear the cart?",
+                "Check Out Cart",
+                "Are you sure you want to check out?",
                 [
                   {
                     text: "Cancel",
@@ -133,11 +166,11 @@ export const Cart = ({ navigation }) => {
                   },
                   {
                     text: "Yes",
-                    onPress: handleClearCartButton,
+                    onPress: handleCheckOutButton,
                   },
                 ]
-              )
-            }
+              );
+            }}
             style={styles.buyButton}
           >
             <Text style={{ color: color.textlight }}>Check Out</Text>
