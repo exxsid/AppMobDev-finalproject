@@ -90,7 +90,7 @@ export const Cart = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
               <ProductCard
                 name={item.name}
-                price={item.price}
+                price={item.price * item.orderQtty}
                 quantity={item.quantity}
                 unit={item.unit}
                 stock={item.orderQtty}
