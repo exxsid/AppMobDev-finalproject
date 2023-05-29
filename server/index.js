@@ -136,7 +136,7 @@ app.post("/saveTransaction", (req, res) => {
                   throw err;
                 });
               }
-              res.send("succes");
+              res.send({ status: 1 });
             });
           });
         });
