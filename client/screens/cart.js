@@ -24,7 +24,7 @@ export const Cart = ({ navigation }) => {
       price: item.price,
       quantity: item.quantity,
       unit: item.unit,
-      stock: item.orderQtty,
+      stock: item.stock,
       category: item.category,
       image: item.image,
       orderQtty: item.orderQtty,

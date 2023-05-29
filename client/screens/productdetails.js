@@ -118,7 +118,10 @@ export const ProductDetails = ({ route, navigation }) => {
                 PhP {route.params.price.toFixed(2)}/{route.params.unit}
               </Text>
               <Text color={color.textlight} fontSize={"lg"}>
-                {route.params.stock} {route.params.unit}
+                {route.params.orderQtty == null
+                  ? route.params.stock
+                  : route.params.orderQtty}{" "}
+                {route.params.unit}
               </Text>
               <Text color={color.textlight} fontSize={"lg"}>
                 {route.params.category}
