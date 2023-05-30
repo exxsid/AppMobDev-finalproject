@@ -8,11 +8,13 @@ import { Home } from "../screens/home";
 import { Scan } from "../screens/scan";
 import { Cart } from "../screens/cart";
 import { ProductDetails } from "../screens/productdetails";
+import { Search } from "../screens/search";
 import color from "../constants/color";
 
 const homeName = "Home";
 const scanName = "Scan";
 const cartName = "Cart";
+const searchName = "Search";
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -34,6 +36,8 @@ export const BottomNavigator = () => {
               iconName = focused ? "ios-scan-sharp" : "ios-scan-outline";
             } else if (rn === cartName) {
               iconName = focused ? "ios-cart-sharp" : "ios-cart-outline";
+            } else if (rn == searchName) {
+              iconName = focused ? "ios-search-sharp" : "ios-search-outline";
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -58,6 +62,7 @@ export const BottomNavigator = () => {
       >
         <Tab.Screen name={homeName} component={HomeStackNavigator} />
         <Tab.Screen name={scanName} component={Scan} />
+        <Tab.Screen name={searchName} component={Search} />
         <Tab.Screen name={cartName} component={CartStackNavigator} />
       </Tab.Navigator>
     </NavigationContainer>
