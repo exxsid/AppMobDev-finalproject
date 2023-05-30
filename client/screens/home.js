@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, HStack, Heading, FlatList, Spinner } from "native-base";
-import { StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
@@ -49,6 +49,19 @@ export const Home = ({ navigation }) => {
     );
   };
 
+  const refreshProductList = () => {
+    setLoading(false);
+    fetch("http://192.168.100.162:3000/products")
+      .then((response) => response.json())
+      .then((prods) => {
+        setProducts(prods[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(true));
+  };
+
   return (
     <>
       <AppBar title="Home" />
@@ -58,16 +71,24 @@ export const Home = ({ navigation }) => {
         alignItems={"center"}
         width={screen.width}
       >
-        <Heading
-          fontSize={"md"}
-          color={color.textdark}
+        <HStack
           py={4}
           px={5}
           width={"full"}
           bg={color.background}
+          justifyContent={"space-between"}
         >
-          All Products
-        </Heading>
+          <Heading fontSize={"md"} color={color.textdark}>
+            All Products
+          </Heading>
+          <TouchableOpacity
+            onPress={refreshProductList}
+            style={styles.refreshButton}
+          >
+            <Text style={{ color: color.textlight }}>Refresh</Text>
+          </TouchableOpacity>
+        </HStack>
+
         {loading ? (
           <FlatList
             flex={1}
@@ -114,19 +135,15 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
   },
+  refreshButton: {
+    padding: 5,
+    backgroundColor: "#00755e",
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    elevation: 10,
+    shadowColor: "rgba(0, 0, 0, 0.3)",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
 });
-
-const data = [
-  {
-    id: 1,
-    name: "Leo",
-  },
-  {
-    id: 2,
-    name: "Anthony",
-  },
-  {
-    id: 3,
-    name: "Cortez",
-  },
-];
