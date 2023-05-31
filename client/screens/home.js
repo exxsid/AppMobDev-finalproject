@@ -16,7 +16,17 @@ export const Home = ({ navigation }) => {
     fetch("http://192.168.100.162:3000/products")
       .then((response) => response.json())
       .then((prods) => {
-        setProducts(prods[0]);
+          prods.forEach(prod => {
+            const image = prod.iamge;
+
+            // covert the blob to base64-encoded string
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = () => {
+              const base64 = reader.result;
+            }
+          });
+        })
       })
       .catch((error) => {
         console.log(error);
