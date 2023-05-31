@@ -20,6 +20,7 @@ const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 const CartStack = createStackNavigator();
 const SearchStack = createStackNavigator();
+const ScanStack = createStackNavigator();
 
 export const BottomNavigator = () => {
   return (
@@ -62,7 +63,7 @@ export const BottomNavigator = () => {
         })}
       >
         <Tab.Screen name={homeName} component={HomeStackNavigator} />
-        <Tab.Screen name={scanName} component={Scan} />
+        <Tab.Screen name={scanName} component={ScanStackNavigator} />
         <Tab.Screen name={searchName} component={SearchStackNavigator} />
         <Tab.Screen name={cartName} component={CartStackNavigator} />
       </Tab.Navigator>
@@ -106,5 +107,18 @@ export const SearchStackNavigator = () => {
       <SearchStack.Screen name={"Search Stack"} component={Search} />
       <SearchStack.Screen name={"Product Details"} component={ProductDetails} />
     </SearchStack.Navigator>
+  );
+};
+
+export const ScanStackNavigator = () => {
+  return (
+    <ScanStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <ScanStack.Screen name={"Scan Stack"} component={Scan} />
+      <ScanStack.Screen name={"Product Details"} component={ProductDetails} />
+    </ScanStack.Navigator>
   );
 };
