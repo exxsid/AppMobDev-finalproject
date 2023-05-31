@@ -82,7 +82,6 @@ export const ProductDetails = ({ route, navigation }) => {
       } else {
         cartlist.push(newItem);
       }
-      console.log(cartlist);
     } else {
       // cart
       const existingItem = cartlist.find((item) => item.id == newItem.id);
@@ -92,7 +91,6 @@ export const ProductDetails = ({ route, navigation }) => {
       } else {
         cartlist.push(newItem);
       }
-      console.log(cartlist);
     }
 
     Alert.alert("Adding to cart success", "", [
