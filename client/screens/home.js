@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, HStack, Heading, FlatList, Spinner } from "native-base";
+import { Box, HStack, Heading, FlatList, Spinner, Center } from "native-base";
 import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
 
 import { AppBar } from "../components/appbar";
@@ -40,12 +40,14 @@ export const Home = ({ navigation }) => {
 
   const renderLoadingSpinner = () => {
     return (
-      <HStack space={2} justifyContent="center">
-        <Spinner accessibilityLabel="Loading posts" />
-        <Heading color={color.primary} fontSize="lg">
-          Loading
-        </Heading>
-      </HStack>
+      <Center flex={1}>
+        <HStack space={2} justifyContent="center">
+          <Spinner accessibilityLabel="Loading posts" color={color.primary} />
+          <Heading color={color.primary} fontSize="lg">
+            Loading
+          </Heading>
+        </HStack>
+      </Center>
     );
   };
 
