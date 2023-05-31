@@ -1,4 +1,4 @@
-import { FlatList, Box, Heading, HStack, Spinner } from "native-base";
+import { FlatList, Box, Heading, HStack, Spinner, Center } from "native-base";
 import React, { useEffect, useState } from "react";
 import {
   TouchableOpacity,
@@ -117,29 +117,38 @@ export const Cart = ({ navigation }) => {
         alignItems={"center"}
         width={screen.width}
       >
-        <FlatList
-          flex={1}
-          data={cartList}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
-              <ProductCard
-                name={item.name}
-                price={item.price * item.orderQtty}
-                quantity={item.quantity}
-                unit={item.unit}
-                stock={item.orderQtty}
-                category={item.category}
-                imageLink={item.image}
-              />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.id}
-          onEndReachedThreshold={0.5}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={5}
-          extraData={cartList}
-        />
+        {cartList.length == 0 ? (
+          <Center flext={1}>
+            <Center>
+              <Text fontSize="md">Cart is empty</Text>
+            </Center>
+          </Center>
+        ) : (
+          <FlatList
+            flex={1}
+            data={cartList}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
+                <ProductCard
+                  name={item.name}
+                  price={item.price * item.orderQtty}
+                  quantity={item.quantity}
+                  unit={item.unit}
+                  stock={item.orderQtty}
+                  category={item.category}
+                  imageLink={item.image}
+                />
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.id}
+            onEndReachedThreshold={0.5}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            initialNumToRender={5}
+            extraData={cartList}
+          />
+        )}
+
         <HStack
           bg={"coolGray.50"}
           width={"full"}
@@ -147,6 +156,8 @@ export const Cart = ({ navigation }) => {
           px={3}
           justifyContent={"space-between"}
           alignItems={"center"}
+          position={"absolute"}
+          bottom={0}
         >
           <Text style={styles.totalAmount}>Total amount: PhP {ttlAmount}</Text>
           <TouchableOpacity
