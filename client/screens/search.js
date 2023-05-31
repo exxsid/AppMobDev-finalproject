@@ -27,15 +27,15 @@ export const Search = ({ navigation }) => {
 
   const navigateToProductDetails = (item) => {
     navigation.push("Product Details", {
-      id: item.id,
+      id: item.prodid,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
       unit: item.unit,
       stock: item.stock_quantity,
-      category: item.category_id,
+      category: item.category,
       image: item.image,
-      previousScreen: "Home",
+      previousScreen: "Search",
     });
   };
 
@@ -71,12 +71,12 @@ export const Search = ({ navigation }) => {
                   quantity={item.quantity}
                   unit={item.unit}
                   stock={item.stock_quantity}
-                  category={item.category_id}
+                  category={item.category}
                   imageLink={item.image}
                 />
               </TouchableOpacity>
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.prodid}
             onEndReachedThreshold={0.5}
             numColumns={2}
             showsVerticalScrollIndicator={false}
