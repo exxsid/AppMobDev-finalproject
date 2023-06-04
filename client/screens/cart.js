@@ -148,46 +148,43 @@ export const Cart = ({ navigation }) => {
             extraData={cartList}
           />
         )}
-
-        <HStack
-          bg={"coolGray.50"}
-          width={"full"}
-          py={5}
-          px={3}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          position={"absolute"}
-          bottom={0}
-        >
-          <Text style={styles.totalAmount}>Total amount: PhP {ttlAmount}</Text>
-          <TouchableOpacity
-            onPress={() => {
-              if (cartlist.length == 0) {
-                alert("Cart is empty");
-                return;
-              }
-              Alert.alert(
-                "Check Out Cart",
-                "Are you sure you want to check out?",
-                [
-                  {
-                    text: "Cancel",
-                    onPress: () => {},
-                    style: "cancel",
-                  },
-                  {
-                    text: "Yes",
-                    onPress: handleCheckOutButton,
-                  },
-                ]
-              );
-            }}
-            style={styles.buyButton}
-          >
-            <Text style={{ color: color.textlight }}>Check Out</Text>
-          </TouchableOpacity>
-        </HStack>
       </Box>
+      <HStack
+        bg={"coolGray.50"}
+        width={"full"}
+        py={5}
+        px={3}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Text style={styles.totalAmount}>Total amount: PhP {ttlAmount}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            if (cartlist.length == 0) {
+              alert("Cart is empty");
+              return;
+            }
+            Alert.alert(
+              "Check Out Cart",
+              "Are you sure you want to check out?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => {},
+                  style: "cancel",
+                },
+                {
+                  text: "Yes",
+                  onPress: handleCheckOutButton,
+                },
+              ]
+            );
+          }}
+          style={styles.buyButton}
+        >
+          <Text style={{ color: color.textlight }}>Check Out</Text>
+        </TouchableOpacity>
+      </HStack>
     </>
   );
 };
