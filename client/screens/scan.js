@@ -54,21 +54,22 @@ export const Scan = ({ navigation }) => {
         if (status == 0) {
           alert("No result found");
         } else {
+          const item = prod[0][0];
           // setScannedProduct(data[0]);
-          const res = arrayBufferToBase64(prod[0][0].image.data);
+          const res = arrayBufferToBase64(item.product_image.data);
           const imageURI = `data:image/jpeg;base64,${res}`;
 
           const newData = {
-            id: prod[0][0].prodid,
-            name: prod[0][0].name,
-            price: prod[0][0].price,
-            quantity: prod[0][0].quantity,
-            unit: prod[0][0].unit,
-            stock: prod[0][0].stock_quantity,
-            category: prod[0][0].category,
+            id: item.product_id,
+            name: item.product_name,
+            price: item.price,
+            quantity: item.quantity,
+            unit: item.unit,
+            stock: item.stock_quantity,
+            category: item.category_name,
             image: imageURI,
           };
-          console.log(newData);
+
           navigateToProductDetails(newData);
         }
       })

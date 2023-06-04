@@ -31,19 +31,19 @@ export const Search = ({ navigation }) => {
           return btoa(binary);
         };
         const newProdData = prods[0].map((item, index) => {
-          const image = item.image;
+          const image = item.product_image;
           return new Promise((resolve, reject) => {
             const res = arrayBufferToBase64(image.data);
             const imageURI = `data:image/jpeg;base64,${res}`;
 
             const newData = {
-              id: item.prodid,
-              name: item.name,
+              id: item.product_id,
+              name: item.product_name,
               price: item.price,
               quantity: item.quantity,
               unit: item.unit,
               stock: item.stock_quantity,
-              category: item.category,
+              category: item.category_name,
               image: imageURI,
             };
 
