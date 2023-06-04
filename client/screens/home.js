@@ -94,7 +94,43 @@ export const Home = ({ navigation }) => {
     fetch("http://192.168.100.162:3000/products")
       .then((response) => response.json())
       .then((prods) => {
-        setProducts(prods[0]);
+        const arrayBufferToBase64 = (b) => {
+          var binary = "";
+          var bytes = new Uint8Array(b);
+          var len = bytes.byteLength;
+          for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        };
+        const newProdData = prods[0].map((item, index) => {
+          const image = item.image;
+          return new Promise((resolve, reject) => {
+            const res = arrayBufferToBase64(image.data);
+            const imageURI = `data:image/jpeg;base64,${res}`;
+
+            const newData = {
+              id: item.prodid,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              unit: item.unit,
+              stock: item.stock_quantity,
+              category: item.category,
+              image: imageURI,
+            };
+
+            resolve(newData);
+          }); // end promise
+        }); // end newProdData
+
+        Promise.all(newProdData)
+          .then((prodData) => {
+            setProducts(prodData);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
         console.log(error);

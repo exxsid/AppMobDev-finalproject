@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Center, HStack, Spinner, Heading } from "native-base";
+import { decode as atob, encode as btoa } from "base-64";
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
@@ -37,14 +38,38 @@ export const Scan = ({ navigation }) => {
     const url = `http://192.168.100.162:3000/searchById/${data}`;
     fetch(url)
       .then((response) => response.json())
-      .then((data) => {
-        // setScannedProduct(data[0]);
-        var status = data[0].length;
+      .then((prod) => {
+        const arrayBufferToBase64 = (b) => {
+          var binary = "";
+          var bytes = new Uint8Array(b);
+          var len = bytes.byteLength;
+          for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        };
+
+        var status = prod[0].length;
+
         if (status == 0) {
           alert("No result found");
         } else {
           // setScannedProduct(data[0]);
-          navigateToProductDetails(data[0][0]);
+          const res = arrayBufferToBase64(prod[0][0].image.data);
+          const imageURI = `data:image/jpeg;base64,${res}`;
+
+          const newData = {
+            id: prod[0][0].prodid,
+            name: prod[0][0].name,
+            price: prod[0][0].price,
+            quantity: prod[0][0].quantity,
+            unit: prod[0][0].unit,
+            stock: prod[0][0].stock_quantity,
+            category: prod[0][0].category,
+            image: imageURI,
+          };
+          console.log(newData);
+          navigateToProductDetails(newData);
         }
       })
       .catch((err) => console.log(err))
@@ -53,12 +78,12 @@ export const Scan = ({ navigation }) => {
 
   const navigateToProductDetails = (item) => {
     navigation.push("Product Details", {
-      id: item.prodid,
+      id: item.id,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
       unit: item.unit,
-      stock: item.stock_quantity,
+      stock: item.stock,
       category: item.category,
       image: item.image,
       previousScreen: "Scan",
