@@ -1,4 +1,14 @@
-import { FlatList, Box, Heading, HStack, Spinner, Center } from "native-base";
+import {
+  FlatList,
+  Box,
+  Heading,
+  HStack,
+  Spinner,
+  Center,
+  Modal,
+  Button,
+  ScrollView,
+} from "native-base";
 import React, { useEffect, useState } from "react";
 import {
   TouchableOpacity,
@@ -7,6 +17,7 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
+import { Table, Rows, Row } from "react-native-table-component";
 
 import { AppBar } from "../components/appbar";
 import cartlist from "../constants/cartlist";
@@ -17,6 +28,11 @@ const screen = Dimensions.get("screen");
 
 export const Cart = ({ navigation }) => {
   const [cartList, setCartList] = useState(cartlist);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const tableHeader = ["Product name", "Price", "Quantity", "Amount"];
+  const [tableData, setTableData] = useState([]);
+
   const ttlAmount = cartList
     .reduce((total, item) => total + item.price * item.orderQtty, 0)
     .toFixed(2);
@@ -39,12 +55,20 @@ export const Cart = ({ navigation }) => {
   const refreshCartList = () => {
     const newData = [...cartlist];
     setCartList(newData);
+    const newTableData = cartlist.map((item) => [
+      item.name,
+      item.price,
+      item.orderQtty,
+      item.price * item.orderQtty,
+    ]);
+    setTableData(newTableData);
   };
 
   const handleClearCartButton = () => {
     cartlist.length = 0;
     const newData = [...cartlist];
     setCartList(newData);
+    setTableData([]);
   };
 
   const handleCheckOutButton = () => {
@@ -74,9 +98,60 @@ export const Cart = ({ navigation }) => {
       });
   };
 
+  const renderModal = () => {
+    return <></>;
+  };
+
   return (
     <>
       <AppBar title="Cart"></AppBar>
+      <Modal
+        isOpen={isVisible}
+        onClose={() => setIsVisible(false)}
+        size={"full"}
+      >
+        <Modal.Content maxHeight={"lg"}>
+          <Modal.Header>Cart List</Modal.Header>
+          <Modal.Body>
+            <Table borderStyle={{ borderWidth: 2, borderColor: "#c8e1ff" }}>
+              <Row data={tableHeader} style={styles.head} />
+            </Table>
+            <ScrollView>
+              <Table borderStyle={{ borderWidth: 2, borderColor: "#c8e1ff" }}>
+                <Rows data={tableData} textStyle={styles.text} />
+              </Table>
+            </ScrollView>
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack
+              flex={1}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Text>Total amount: {ttlAmount}</Text>
+              <Button.Group space={2}>
+                <Button
+                  variant="ghost"
+                  colorScheme="blueGray"
+                  onPress={() => {
+                    setIsVisible(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onPress={() => {
+                    handleCheckOutButton();
+                    setIsVisible(false);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </Button.Group>
+            </HStack>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
       <HStack justifyContent={"flex-end"} space={5} p={4} bg={color.background}>
         <TouchableOpacity
           onPress={refreshCartList}
@@ -164,21 +239,7 @@ export const Cart = ({ navigation }) => {
               alert("Cart is empty");
               return;
             }
-            Alert.alert(
-              "Check Out Cart",
-              "Are you sure you want to check out?",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => {},
-                  style: "cancel",
-                },
-                {
-                  text: "Yes",
-                  onPress: handleCheckOutButton,
-                },
-              ]
-            );
+            setIsVisible(true);
           }}
           style={styles.buyButton}
         >
@@ -227,4 +288,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
+  text: { margin: 6 },
+  head: { height: 40, backgroundColor: "#f1f8ff" },
 });
