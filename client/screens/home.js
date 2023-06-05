@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, HStack, Heading, FlatList, Spinner, Center } from "native-base";
+import {
+  Box,
+  HStack,
+  Heading,
+  FlatList,
+  Spinner,
+  Center,
+  Button,
+} from "native-base";
 import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
 import { Buffer } from "buffer";
 import { decode as atob, encode as btoa } from "base-64";
@@ -13,11 +21,18 @@ const screen = Dimensions.get("screen");
 export const Home = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [nextPage, setNextPage] = useState(2);
+  const [prevPage, setPrevPage] = useState(0);
+  const [currPage, setCurrPage] = useState(1);
 
   useEffect(() => {
-    fetch("http://192.168.100.162:3000/products")
+    fetch(`http://192.168.100.162:3000/products/${currPage}`)
       .then((response) => response.json())
       .then((prods) => {
+        setPrevPage(prods.prev);
+        setNextPage(prods.next);
+        setCurrPage((prods.prev + prods.next) / 2);
+
         const arrayBufferToBase64 = (b) => {
           var binary = "";
           var bytes = new Uint8Array(b);
@@ -27,7 +42,7 @@ export const Home = ({ navigation }) => {
           }
           return btoa(binary);
         };
-        const newProdData = prods[0].map((item, index) => {
+        const newProdData = prods.data.map((item, index) => {
           const image = item.product_image;
           return new Promise((resolve, reject) => {
             const res = arrayBufferToBase64(image.data);
@@ -91,9 +106,13 @@ export const Home = ({ navigation }) => {
 
   const refreshProductList = () => {
     setLoading(false);
-    fetch("http://192.168.100.162:3000/products")
+    fetch(`http://192.168.100.162:3000/products/${currPage}`)
       .then((response) => response.json())
       .then((prods) => {
+        setPrevPage(prods.prev);
+        setNextPage(prods.next);
+        setCurrPage((prods.prev + prods.next) / 2);
+
         const arrayBufferToBase64 = (b) => {
           var binary = "";
           var bytes = new Uint8Array(b);
@@ -103,7 +122,113 @@ export const Home = ({ navigation }) => {
           }
           return btoa(binary);
         };
-        const newProdData = prods[0].map((item, index) => {
+        const newProdData = prods.data.map((item, index) => {
+          const image = item.product_image;
+          return new Promise((resolve, reject) => {
+            const res = arrayBufferToBase64(image.data);
+            const imageURI = `data:image/jpeg;base64,${res}`;
+
+            const newData = {
+              id: item.product_id,
+              name: item.product_name,
+              price: item.price,
+              quantity: item.quantity,
+              unit: item.unit,
+              stock: item.stock_quantity,
+              category: item.category_name,
+              image: imageURI,
+            };
+
+            resolve(newData);
+          }); // end promise
+        }); // end newProdData
+
+        Promise.all(newProdData)
+          .then((prodData) => {
+            setProducts(prodData);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(true));
+  };
+
+  const handleNextBtn = (page) => {
+    setLoading(false);
+    fetch(`http://192.168.100.162:3000/products/${page}`)
+      .then((response) => response.json())
+      .then((prods) => {
+        setPrevPage(prods.prev);
+        setNextPage(prods.next);
+        setCurrPage((prods.prev + prods.next) / 2);
+
+        const arrayBufferToBase64 = (b) => {
+          var binary = "";
+          var bytes = new Uint8Array(b);
+          var len = bytes.byteLength;
+          for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        };
+        const newProdData = prods.data.map((item, index) => {
+          const image = item.product_image;
+          return new Promise((resolve, reject) => {
+            const res = arrayBufferToBase64(image.data);
+            const imageURI = `data:image/jpeg;base64,${res}`;
+
+            const newData = {
+              id: item.product_id,
+              name: item.product_name,
+              price: item.price,
+              quantity: item.quantity,
+              unit: item.unit,
+              stock: item.stock_quantity,
+              category: item.category_name,
+              image: imageURI,
+            };
+
+            resolve(newData);
+          }); // end promise
+        }); // end newProdData
+
+        Promise.all(newProdData)
+          .then((prodData) => {
+            setProducts(prodData);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(true));
+  };
+
+  const handlePrevBtn = (page) => {
+    setLoading(false);
+    fetch(`http://192.168.100.162:3000/products/${page}`)
+      .then((response) => response.json())
+      .then((prods) => {
+        setPrevPage(prods.prev);
+        setNextPage(prods.next);
+        setCurrPage((prods.prev + prods.next) / 2);
+
+        const arrayBufferToBase64 = (b) => {
+          var binary = "";
+          var bytes = new Uint8Array(b);
+          var len = bytes.byteLength;
+          for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary);
+        };
+        const newProdData = prods.data.map((item, index) => {
           const image = item.product_image;
           return new Promise((resolve, reject) => {
             const res = arrayBufferToBase64(image.data);
@@ -191,6 +316,40 @@ export const Home = ({ navigation }) => {
         ) : (
           renderLoadingSpinner()
         )}
+        <HStack
+          width={"full"}
+          py={1}
+          px={3}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          {prevPage == 0 ? (
+            <Button
+              onPress={() => handlePrevBtn(prevPage)}
+              variant={"subtle"}
+              isDisabled
+            >
+              Previous
+            </Button>
+          ) : (
+            <Button onPress={() => handlePrevBtn(prevPage)} variant={"subtle"}>
+              Previous
+            </Button>
+          )}
+          {nextPage == 0 ? (
+            <Button
+              onPress={() => handleNextBtn(nextPage)}
+              variant={"subtle"}
+              isDisabled
+            >
+              Next
+            </Button>
+          ) : (
+            <Button onPress={() => handleNextBtn(nextPage)} variant={"subtle"}>
+              Next
+            </Button>
+          )}
+        </HStack>
       </Box>
     </>
   );
