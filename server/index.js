@@ -28,6 +28,21 @@ app.get("/products", (req, res) => {
   });
 });
 
+app.get("/products/:offset", (req, res) => {
+  const offset = parseInt(req.params.offset);
+  const query = `CALL GetProductsPerPage(${offset})`;
+  db.query(query, (error, result) => {
+    if (error) throw error;
+    const prev = offset == 1 ? 0 : offset - 1;
+    const next = result[0].length < 10 ? 0 : offset + 1;
+    res.send({
+      prev: prev,
+      next: next,
+      data: result[0],
+    });
+  });
+});
+
 app.get("/searchByName/:name", (req, res) => {
   const prodName = req.params.name;
   const query = `CALL SearchProductByName("${prodName}")`;
