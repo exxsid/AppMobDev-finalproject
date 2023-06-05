@@ -9,8 +9,8 @@ import {
   Button,
 } from "native-base";
 import { StyleSheet, TouchableOpacity, Dimensions, Text } from "react-native";
-import { Buffer } from "buffer";
 import { decode as atob, encode as btoa } from "base-64";
+require("dotenv").config();
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
@@ -26,7 +26,9 @@ export const Home = ({ navigation }) => {
   const [currPage, setCurrPage] = useState(1);
 
   useEffect(() => {
-    fetch(`http://192.168.100.162:3000/products/${currPage}`)
+    fetch(
+      `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/products/${currPage}`
+    )
       .then((response) => response.json())
       .then((prods) => {
         setPrevPage(prods.prev);
@@ -106,7 +108,9 @@ export const Home = ({ navigation }) => {
 
   const refreshProductList = () => {
     setLoading(false);
-    fetch(`http://192.168.100.162:3000/products/${currPage}`)
+    fetch(
+      `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/products/${currPage}`
+    )
       .then((response) => response.json())
       .then((prods) => {
         setPrevPage(prods.prev);
@@ -159,7 +163,9 @@ export const Home = ({ navigation }) => {
 
   const handleNextBtn = (page) => {
     setLoading(false);
-    fetch(`http://192.168.100.162:3000/products/${page}`)
+    fetch(
+      `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/products/${page}`
+    )
       .then((response) => response.json())
       .then((prods) => {
         setPrevPage(prods.prev);
@@ -212,7 +218,9 @@ export const Home = ({ navigation }) => {
 
   const handlePrevBtn = (page) => {
     setLoading(false);
-    fetch(`http://192.168.100.162:3000/products/${page}`)
+    fetch(
+      `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/products/${page}`
+    )
       .then((response) => response.json())
       .then((prods) => {
         setPrevPage(prods.prev);

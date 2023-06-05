@@ -18,6 +18,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { Table, Rows, Row } from "react-native-table-component";
+require("dotenv").config();
 
 import { AppBar } from "../components/appbar";
 import cartlist from "../constants/cartlist";
@@ -72,21 +73,24 @@ export const Cart = ({ navigation }) => {
   };
 
   const handleCheckOutButton = () => {
-    fetch("http://192.168.100.162:3000/saveTransaction", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        totalAmount: ttlAmount,
-        data: cartlist.map(({ id, orderQtty, price }) => ({
-          id,
-          quantity: orderQtty,
-          amount: orderQtty * price,
-        })),
-      }),
-    })
+    fetch(
+      "http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/saveTransaction",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          totalAmount: ttlAmount,
+          data: cartlist.map(({ id, orderQtty, price }) => ({
+            id,
+            quantity: orderQtty,
+            amount: orderQtty * price,
+          })),
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status == 1) {

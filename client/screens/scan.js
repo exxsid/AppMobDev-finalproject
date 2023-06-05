@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Center, HStack, Spinner, Heading } from "native-base";
 import { decode as atob, encode as btoa } from "base-64";
+require("dotenv").config();
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
@@ -35,7 +36,7 @@ export const Scan = ({ navigation }) => {
   }, [navigation]);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    const url = `http://192.168.100.162:3000/searchById/${data}`;
+    const url = `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/searchById/${data}`;
     fetch(url)
       .then((response) => response.json())
       .then((prod) => {

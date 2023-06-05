@@ -3,6 +3,7 @@ import { Input, Icon, Center, Text, FlatList, Box } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { decode as atob, encode as btoa } from "base-64";
+require("dotenv").config();
 
 import { AppBar } from "../components/appbar";
 import color from "../constants/color";
@@ -17,7 +18,7 @@ export const Search = ({ navigation }) => {
   };
 
   const handleSearch = () => {
-    const url = `http://192.168.100.162:3000/searchByName/${searchText}`;
+    const url = `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/searchByName/${searchText}`;
     fetch(url)
       .then((response) => response.json())
       .then((prods) => {
